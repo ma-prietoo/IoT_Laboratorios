@@ -56,13 +56,11 @@ Channel 23 showed the lowest detected energy level during the scan, at -108 dBm.
 ### Domain Mapping
 
 | Component | ISO Domain | Justification |
-|---|---|---|
-| ESP32-C6 | SCD - Sensing and Controlling Domain | Acts as an IoT node with communication capabilities, local processing, and participation in the Thread network. |
-| ESP32-C6 IEEE 802.15.4 Radio | SCD - Sensing and Controlling Domain | It is the module that enables wireless data transmission and reception between nodes. |
-| 2.4 GHz RF Channel | PED - Physical Entity Domain | It is the physical medium through which the electromagnetic signal propagates. |
-| OpenThread | SCD / Functional Viewpoint | Implements the network stack required for IPv6 communication over IEEE 802.15.4. |
-| JTAG | Construction / Management Support | Used as a debugging and programming interface, not as an application data channel. |
-| Development PC | User / Management Support | Allows configuration, monitoring, and debugging of nodes during the laboratory. |
+|-----------|------------|---------------|
+| ESP32-C6 SoC | SCD | Sensing/Controlling device (Section 6.4-6.5 of standard) |
+| 802.15.4 Radio | SCD | Communication subsystem |
+| Antenna | SCD | Physical interface to PED |
+| Air (RF medium) | PED | Physical entity - electromagnetic propagation |
 
 ### Component Capabilities
 
