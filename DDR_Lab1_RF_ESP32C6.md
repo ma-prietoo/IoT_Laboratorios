@@ -313,8 +313,18 @@ Possible causes:
 
 The radio should be turned off when not being tested. This reduces unnecessary occupation of the shared 2.4 GHz spectrum and saves energy.
 
+## 13. Viewpoint Analysis
 
-## 13. Answers to Final Lab Questions
+| Viewpoint | Labs Addressed | Key Concerns Documented |
+|---|---|---|
+| Foundational | Lab 1 | Radio propagation, channel selection, packet loss, latency. |
+| Business | Lab 1 | Whether ESP32-C6 is viable for low-cost sensor nodes. |
+| Usage | Lab 1 | Recommended spacing and troubleshooting for deployment. |
+| Functional | Lab 1 | IPv6 ping over OpenThread after dataset channel configuration. |
+| Trustworthiness | Lab 1 | Reliability decreases strongly after 10 m. |
+| Construction | Lab 1 | ESP32-C6 configured with JTAG and OpenThread CLI. |
+
+## 14. Answers to Final Lab Questions
 
 ### 1. What is the maximum reliable range between sensor nodes?
 
@@ -361,7 +371,20 @@ Radio propagation is affected by more than distance. At 20 m, the antenna orient
 * Compare results using different channels.
 * Try different transmit power levels.
 
-## 14. Final Analysis
+## 15. Trustworthiness Audit
+
+| Characteristic | Addressed? | How | Gaps |
+|---|---|---|---|
+| Availability | Partially | Packet loss measured at different distances. | More tests needed outdoors. |
+| Confidentiality | No | Not evaluated in Lab 1. | Security/DTLS pending. |
+| Integrity | Partially | ICMPv6 packets were either received or lost. | No payload integrity test beyond protocol behavior. |
+| Reliability | Yes | Packet delivery rate and RTT measured. | Need RSSI per distance. |
+| Resilience | Partially | Errors `NoAck` were observed. | Mesh healing not tested. |
+| Safety | Yes | Passive energy scan; no active interference. | None for Lab 1. |
+| Compliance | Partially | Used IEEE 802.15.4/OpenThread stack. | Formal regulatory compliance not evaluated. |
+
+
+## 16. Final Analysis
 
 The laboratory successfully validated the basic RF operation of the ESP32-C6 using OpenThread. The selected channel was technically justified because channel 23 had the lowest measured energy. After configuring this channel, the nodes communicated successfully using IPv6 ping.
 
