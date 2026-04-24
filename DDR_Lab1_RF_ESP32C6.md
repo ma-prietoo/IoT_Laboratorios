@@ -1,8 +1,8 @@
 # Design & Decision Record (DDR)
 **GreenField Technologies | IoT Systems Design**
 
-**Laboratorio:** Lab 1 - RF Characterization  
-**Equipo:** María de los Ángeles Prieto Ortega - Mariana Zuluaga Yepes
+**Laboratory:** Lab 1 - RF Characterization  
+**Team:** María de los Ángeles Prieto Ortega - Mariana Zuluaga Yepes  
 
 ## 1. System Overview
 
@@ -10,9 +10,9 @@
 
 * **Description:**
 
-Se realizó la caracterización inicial de radiofrecuencia del ESP32-C6 usando OpenThread. El objetivo fue validar si dos nodos ESP32-C6 pueden comunicarse de forma estable usando radio IEEE 802.15.4 en la banda de 2.4 GHz. Para ello se realizó un escaneo de energía por canal, se seleccionó el canal con menor interferencia y luego se hicieron pruebas de transmisión y recepción mediante `ot ping` a diferentes distancias.
+An initial radiofrequency characterization of the ESP32-C6 was carried out using OpenThread. The objective was to validate whether two ESP32-C6 nodes can communicate reliably using IEEE 802.15.4 radio in the 2.4 GHz band. To achieve this, an energy scan per channel was performed, the channel with the lowest interference was selected, and transmission and reception tests were conducted using `ot ping` at different distances.
 
-El ESP32-C6 fue configurado y depurado mediante JTAG, lo cual permitió trabajar con el entorno de desarrollo de ESP-IDF y observar directamente los mensajes de OpenThread durante las pruebas.
+The ESP32-C6 was configured and debugged using JTAG, which allowed working with the ESP-IDF development environment and directly observing OpenThread messages during the tests.
 
 ## 2. Lab Log & Stakeholder Summaries
 
