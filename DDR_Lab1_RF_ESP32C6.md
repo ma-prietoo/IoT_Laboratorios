@@ -64,17 +64,12 @@ Channel 23 showed the lowest detected energy level during the scan, at -108 dBm.
 
 ### Component Capabilities
 
-| Capability Category | Subcategory | Component/Feature | Active/Latent | Lab Introduced |
-|---|---|---|---|---|
-| Communication | Wireless network interface | Radio IEEE 802.15.4 | Active | Lab 1 |
-| Communication | IPv6 connectivity | OpenThread IPv6 | Active | Lab 1 |
-| Communication | Mesh networking | Thread mesh capability | Latent | Lab 1 |
-| Processing | Local embedded processing | CPU ESP32-C6 | Active | Lab 1 |
-| Management | Debug and programming | JTAG | Active | Lab 1 |
-| Communication | WiFi radio | WiFi del ESP32-C6 | Latent | Lab 1 |
-| Communication | Bluetooth LE | BLE del ESP32-C6 | Latent | Lab 1 |
-| Security | Secure communication | Seguridad de Thread | Latent | Lab 1 |
-| Observation | RF environment scan | Energy scan by channel | Active | Lab 1 |
+| Capability Category | Subcategory        | Component/Feature         | Active/Latent | Lab Introduced |
+|--------------------|--------------------|----------------------------|----------------|----------------|
+| Processing         | Embedded control   | ESP32-C6 SoC               | Active         | Lab 1          |
+| Communication      | RF transmission    | 802.15.4 Radio             | Active         | Lab 1          |
+| Communication      | Physical interface | Antenna                    | Active         | Lab 1          |
+| Transfer           | Propagation        | Air (RF medium)            | Latent         | Lab 1          |
 
 ## 5. First Principles Reflections
 
