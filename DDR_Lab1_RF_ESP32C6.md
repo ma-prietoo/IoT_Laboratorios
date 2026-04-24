@@ -4,8 +4,6 @@
 **Laboratorio:** Lab 1 - RF Characterization  
 **Equipo:** María de los Ángeles Prieto Ortega - Mariana Zuluaga Yepes
 
----
-
 ## 1. System Overview
 
 * **System Type:** [x] Component (Lab 1-2) | [ ] System (Lab 3-6) | [ ] Environment (Lab 7-8)
@@ -15,8 +13,6 @@
 Se realizó la caracterización inicial de radiofrecuencia del ESP32-C6 usando OpenThread. El objetivo fue validar si dos nodos ESP32-C6 pueden comunicarse de forma estable usando radio IEEE 802.15.4 en la banda de 2.4 GHz. Para ello se realizó un escaneo de energía por canal, se seleccionó el canal con menor interferencia y luego se hicieron pruebas de transmisión y recepción mediante `ot ping` a diferentes distancias.
 
 El ESP32-C6 fue configurado y depurado mediante JTAG, lo cual permitió trabajar con el entorno de desarrollo de ESP-IDF y observar directamente los mensajes de OpenThread durante las pruebas.
-
----
 
 ## 2. Lab Log & Stakeholder Summaries
 
@@ -38,8 +34,6 @@ También se observó que al aumentar la distancia aparecen errores `NoAck`, lo q
 
 Recomendación: mantener los nodos a una distancia máxima de 10 m para pruebas confiables en interiores o en un entorno con interferencias no controladas.
 
----
-
 ## 3. Architecture Decision Records (ADRs)
 
 ### ADR-001: Selección del canal 23 para la red Thread
@@ -57,8 +51,6 @@ Se seleccionó el canal 23 para operar la red Thread.
 El canal 23 presentó el menor nivel de energía detectada durante el escaneo, con -108 dBm. Un valor más negativo indica menor energía interferente en ese canal. Por tanto, el canal 23 ofrecía mejores condiciones iniciales para la comunicación.
 
 * **Status:** [ ] Proposed | [x] Accepted | [ ] Deprecated
-
----
 
 ## 4. ISO/IEC 30141 Mapping
 
@@ -87,8 +79,6 @@ El canal 23 presentó el menor nivel de energía detectada durante el escaneo, c
 | Security | Secure communication | Seguridad de Thread | Latent | Lab 1 |
 | Observation | RF environment scan | Energy scan by channel | Active | Lab 1 |
 
----
-
 ## 5. First Principles Reflections
 
 ### Lab 1
@@ -116,8 +106,6 @@ IEEE 802.15.4 está diseñado para redes de bajo consumo y baja tasa de datos. P
 #### 4. ¿Qué significa elegir el canal con menor RSSI?
 
 En el escaneo de energía, el RSSI indica cuánta energía se detecta en cada canal. Esa energía puede venir de otros dispositivos, ruido o interferencias. Un valor más negativo, como -108 dBm, indica un canal más limpio. Por eso el canal 23 fue una buena elección.
-
----
 
 ## 6. RF Scan Results
 
@@ -164,8 +152,6 @@ ot dataset channel 23
 
 Con esto se configuró el dataset de Thread para operar en el canal 23.
 
----
-
 ## 7. Range Testing Results
 
 ### Comando base usado
@@ -194,8 +180,6 @@ El comando envía 100 paquetes ICMPv6 usando OpenThread. Se usó para medir pér
 
 Aunque a 20 m la pérdida fue menor que a 15 m, el comportamiento general muestra degradación del enlace cuando aumenta la distancia. Esta diferencia puede deberse a orientación de antenas, reflexiones, obstáculos, multipath o variaciones momentáneas de interferencia. En radiofrecuencia no siempre el deterioro es perfectamente lineal.
 
----
-
 ## 8. Performance Baselines
 
 | Metric | Target | Measured | Status |
@@ -211,8 +195,6 @@ Aunque a 20 m la pérdida fue menor que a 15 m, el comportamiento general muestr
 El laboratorio pedía validar un rango mayor a 20 m. Los nodos lograron comunicación a 20 m, pero no de forma confiable porque hubo 20% de pérdida de paquetes. Si el criterio es confiabilidad alta, el rango aceptable medido fue 10 m, ya que hasta esa distancia la pérdida fue 0%.
 
 Por tanto, el resultado debe marcarse como **parcial**: sí hubo comunicación más allá de 20 m, pero no con calidad suficiente para una red de sensores crítica.
-
----
 
 ## 9. Link Budget Calculation
 
@@ -248,8 +230,6 @@ El cálculo ideal solo considera espacio libre. En un laboratorio real, el compo
 * interferencia WiFi,
 * ruido de otros equipos.
 
----
-
 ## 10. One-Page Performance Summary
 
 # GreenField SoilSense - Lab 1 Performance Report
@@ -276,8 +256,6 @@ El cálculo ideal solo considera espacio libre. En un laboratorio real, el compo
 **Need more testing.**
 
 The ESP32-C6 works correctly, but the measured reliable distance was 10 m. Before using it in a real agricultural deployment, outdoor line-of-sight tests should be performed. The current indoor or semi-controlled test shows that distance, obstacles and antenna orientation strongly affect reliability.
-
----
 
 ## 11. Quick Reference for Edwin
 
@@ -329,8 +307,6 @@ Possible causes:
 * Communication possible but degraded: **15 m to 20 m**
 * Not recommended under these test conditions: **25 m to 35 m**
 
----
-
 ## 12. Ethics & Sustainability Checklist
 
 * [x] **Lab 1:** Verified interference doesn't disrupt neighbors. The energy scan is passive and does not jam other users.
@@ -343,8 +319,6 @@ Possible causes:
 
 The radio should be turned off when not being tested. This reduces unnecessary occupation of the shared 2.4 GHz spectrum and saves energy.
 
----
-
 ## 13. Viewpoint Analysis
 
 | Viewpoint | Labs Addressed | Key Concerns Documented |
@@ -355,8 +329,6 @@ The radio should be turned off when not being tested. This reduces unnecessary o
 | Functional | Lab 1 | IPv6 ping over OpenThread after dataset channel configuration. |
 | Trustworthiness | Lab 1 | Reliability decreases strongly after 10 m. |
 | Construction | Lab 1 | ESP32-C6 configured with JTAG and OpenThread CLI. |
-
----
 
 ## 14. Trustworthiness Audit
 
@@ -369,8 +341,6 @@ The radio should be turned off when not being tested. This reduces unnecessary o
 | Resilience | Partially | Errors `NoAck` were observed. | Mesh healing not tested. |
 | Safety | Yes | Passive energy scan; no active interference. | None for Lab 1. |
 | Compliance | Partially | Used IEEE 802.15.4/OpenThread stack. | Formal regulatory compliance not evaluated. |
-
----
 
 ## 15. Construction Viewpoint - IoT System Pattern
 
@@ -391,8 +361,6 @@ The radio should be turned off when not being tested. This reduces unnecessary o
 | Supplemental (security) | Thread security | Present but not deeply evaluated. |
 | Supplemental (orchestration) | Network formation | Basic channel selection and communication. |
 | Supplemental (management) | Debug | JTAG and terminal logs. |
-
----
 
 ## 16. Answers to Final Lab Questions
 
@@ -441,8 +409,6 @@ Radio propagation is affected by more than distance. At 20 m, the antenna orient
 * Compare results using different channels.
 * Try different transmit power levels.
 
----
-
 ## 17. Final Analysis
 
 The laboratory successfully validated the basic RF operation of the ESP32-C6 using OpenThread. The selected channel was technically justified because channel 23 had the lowest measured energy. After configuring this channel, the nodes communicated successfully using IPv6 ping.
@@ -452,8 +418,6 @@ The strongest result is that the system was fully reliable up to 10 m, with 0% p
 However, the system degraded sharply after 10 m. At 15 m the packet loss was 39%, and at 20 m it was 20%. Although communication was still possible, the reliability was not good enough for a production sensor network. At 30 m and 35 m the packet loss reached 52%, which means almost half of the messages were not received.
 
 The main engineering conclusion is that the ESP32-C6 radio works, but the tested deployment conditions do not support a 20 m reliable spacing. For a real field deployment, the node spacing should be reduced or the network should include more router nodes. Outdoor line-of-sight testing is required before making a final production decision.
-
----
 
 ## 18. Final Recommendation
 
