@@ -1,7 +1,6 @@
 # Design & Decision Record (DDR)
 **GreenField Technologies | IoT Systems Design**
 
-**Laboratory:** Lab 1 - RF Characterization  
 **Team:** María de los Ángeles Prieto Ortega - Mariana Zuluaga Yepes  
 
 ## 1. System Overview
