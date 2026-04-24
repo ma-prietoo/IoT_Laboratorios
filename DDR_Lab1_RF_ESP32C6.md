@@ -214,8 +214,6 @@ For 2.4 GHz:
 | 30 m | 69.59 dB |
 | 35 m | 70.94 dB |
 
-### Análisis
-
 ### Analysis
 
 From 10 m to 20 m, the theoretical loss increases by approximately 6 dB. In radiofrequency systems, a 6 dB increase can be enough to shift from a stable link to one with retransmissions and packet loss, especially in the presence of obstacles, reflections, or interference.
