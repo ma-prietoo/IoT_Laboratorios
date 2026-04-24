@@ -423,11 +423,5 @@ The main engineering conclusion is that the ESP32-C6 radio works, but the tested
 
 Use the ESP32-C6 as a valid platform for short-range Thread communication, but do not assume 20 m reliable spacing based on this test.
 
-Recommended design value:
-
-```text
-Recommended spacing = 8 m to 10 m
-```
-
 This gives a safety margin below the maximum reliable distance measured.
 
