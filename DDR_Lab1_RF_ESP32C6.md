@@ -20,19 +20,19 @@ The ESP32-C6 was configured and debugged using JTAG, which allowed working with 
 
 #### To Samuel (Architect)
 
-Se validó empíricamente el comportamiento de radio del ESP32-C6 usando OpenThread. El canal más limpio encontrado fue el canal 23, con un nivel de energía de -108 dBm durante el escaneo. Después de configurar la red en ese canal, se realizaron pruebas de ping IPv6 a varias distancias.
+The radio behavior of the ESP32-C6 using OpenThread was empirically validated. The cleanest channel found was channel 23, with an energy level of -108 dBm during the scan. After configuring the network on this channel, IPv6 ping tests were performed at various distances.
 
-El enlace fue completamente estable hasta 10 m, con 0% de pérdida de paquetes. A 20 m todavía se logró comunicación, pero la pérdida aumentó a 20%. A partir de 25 m y 30 m la pérdida fue alta, entre 31% y 52%, por lo que el enlace ya no puede considerarse confiable para una red de sensores que requiere alta disponibilidad.
+The link was completely stable up to 10 m, with 0% packet loss. At 20 m, communication was still achieved, but packet loss increased to 20%. From 25 m and 30 m onwards, packet loss was high, between 31% and 52%, meaning the link can no longer be considered reliable for a sensor network that requires high availability.
 
-Conclusión: el ESP32-C6 sí funciona correctamente para comunicación Thread de corto alcance, pero con los datos obtenidos se recomienda usar una separación práctica máxima cercana a 10 m para asegurar confiabilidad.
+Conclusion: the ESP32-C6 works correctly for short-range Thread communication, but based on the obtained data, a practical maximum spacing of around 10 m is recommended to ensure reliability.
 
 #### To Edwin (Ops)
 
-La red funcionó correctamente cuando ambos nodos usaron el mismo canal. El canal configurado fue el 23. Si un nodo no se une a la red o no responde a ping, lo primero que debe revisarse es que el `dataset channel` coincida en ambos dispositivos.
+The network operated correctly when both nodes used the same channel. The configured channel was 23. If a node does not join the network or does not respond to ping, the first thing to check is that the `dataset channel` matches on both devices.
 
-También se observó que al aumentar la distancia aparecen errores `NoAck`, lo que significa que un paquete fue enviado, pero no se recibió confirmación desde el otro nodo. Esto normalmente ocurre por baja señal, obstáculos, orientación de antena, interferencia o distancia excesiva.
+It was also observed that as distance increases, `NoAck` errors appear, meaning that a packet was sent but no acknowledgment was received from the other node. This typically occurs due to weak signal, obstacles, antenna orientation, interference, or excessive distance.
 
-Recomendación: mantener los nodos a una distancia máxima de 10 m para pruebas confiables en interiores o en un entorno con interferencias no controladas.
+Recommendation: keep the nodes at a maximum distance of 10 m for reliable testing in indoor environments or in environments with uncontrolled interference.
 
 ## 3. Architecture Decision Records (ADRs)
 
@@ -40,15 +40,15 @@ Recomendación: mantener los nodos a una distancia máxima de 10 m para pruebas 
 
 * **Context:**
 
-La red Thread trabaja sobre IEEE 802.15.4 en la banda de 2.4 GHz. Esta banda también puede ser usada por WiFi y otros dispositivos, por lo que antes de crear la red se debe escoger un canal con baja interferencia. Se ejecutó un escaneo de energía con `ot scan energy 500`.
+The Thread network operates over IEEE 802.15.4 in the 2.4 GHz band. This band can also be used by WiFi and other devices, so before creating the network, a channel with low interference must be selected. An energy scan was performed using `ot scan energy 500`.
 
 * **Decision:**
 
-Se seleccionó el canal 23 para operar la red Thread.
+Channel 23 was selected to operate the Thread network.
 
 * **Rationale:**
 
-El canal 23 presentó el menor nivel de energía detectada durante el escaneo, con -108 dBm. Un valor más negativo indica menor energía interferente en ese canal. Por tanto, el canal 23 ofrecía mejores condiciones iniciales para la comunicación.
+Channel 23 showed the lowest detected energy level during the scan, at -108 dBm. A more negative value indicates lower interfering energy on that channel. Therefore, channel 23 provided better initial conditions for communication.
 
 * **Status:** [ ] Proposed | [x] Accepted | [ ] Deprecated
 
@@ -58,12 +58,12 @@ El canal 23 presentó el menor nivel de energía detectada durante el escaneo, c
 
 | Component | ISO Domain | Justification |
 |---|---|---|
-| ESP32-C6 | SCD - Sensing and Controlling Domain | Actúa como nodo IoT con capacidad de comunicación, procesamiento local y participación en la red Thread. |
-| Radio IEEE 802.15.4 del ESP32-C6 | SCD - Sensing and Controlling Domain | Es el módulo que permite transmitir y recibir datos inalámbricos entre nodos. |
-| Canal RF de 2.4 GHz | PED - Physical Entity Domain | Es el medio físico por donde se propaga la señal electromagnética. |
-| OpenThread | SCD / Functional Viewpoint | Implementa la pila de red necesaria para comunicación IPv6 sobre IEEE 802.15.4. |
-| JTAG | Construction / Management Support | Se usó como interfaz de depuración y programación, no como canal de datos de la aplicación. |
-| PC de desarrollo | User / Management Support | Permite configurar, monitorear y depurar los nodos durante el laboratorio. |
+| ESP32-C6 | SCD - Sensing and Controlling Domain | Acts as an IoT node with communication capabilities, local processing, and participation in the Thread network. |
+| ESP32-C6 IEEE 802.15.4 Radio | SCD - Sensing and Controlling Domain | It is the module that enables wireless data transmission and reception between nodes. |
+| 2.4 GHz RF Channel | PED - Physical Entity Domain | It is the physical medium through which the electromagnetic signal propagates. |
+| OpenThread | SCD / Functional Viewpoint | Implements the network stack required for IPv6 communication over IEEE 802.15.4. |
+| JTAG | Construction / Management Support | Used as a debugging and programming interface, not as an application data channel. |
+| Development PC | User / Management Support | Allows configuration, monitoring, and debugging of nodes during the laboratory. |
 
 ### Component Capabilities
 
@@ -83,35 +83,33 @@ El canal 23 presentó el menor nivel de energía detectada durante el escaneo, c
 
 ### Lab 1
 
-#### 1. ¿Por qué la señal se debilita cuando aumenta la distancia?
+#### 1. Why does the signal weaken as distance increases?
 
-La señal de radio se propaga como una onda electromagnética. A medida que se aleja del transmisor, la energía se reparte en un área mayor. Por eso, la potencia recibida disminuye con la distancia. En espacio libre, esta caída se aproxima con una relación cuadrática: si se duplica la distancia, la potencia recibida baja de forma importante.
+A radio signal propagates as an electromagnetic wave. As it moves away from the transmitter, its energy spreads over a larger area. Therefore, the received power decreases with distance. In free space, this decay can be approximated by a quadratic relationship: if the distance is doubled, the received power decreases significantly.
 
-En términos prácticos, cuando los nodos se separan más, el receptor recibe una señal más débil. Si la señal queda muy cerca del ruido o de la interferencia del ambiente, aparecen retransmisiones, retardos altos y pérdida de paquetes.
+In practical terms, as the nodes move farther apart, the receiver gets a weaker signal. If the signal becomes too close to the noise floor or environmental interference, retransmissions, higher delays, and packet loss occur.
 
-#### 2. ¿Por qué una distancia mayor genera más pérdida de paquetes?
+#### 2. Why does a greater distance lead to higher packet loss?
 
-Al aumentar la distancia, baja la relación señal a ruido. Esto significa que al receptor le cuesta más distinguir la información útil del ruido de fondo. Cuando el receptor no puede decodificar correctamente un paquete, no envía confirmación o ACK. En las pruebas esto se observó con mensajes como:
-
+As distance increases, the signal-to-noise ratio decreases. This means the receiver has more difficulty distinguishing useful information from background noise. When the receiver cannot correctly decode a packet, it does not send an acknowledgment (ACK). In the tests, this was observed with messages such as:
 ```text
 MeshForwarder: Failed to send IPv6 ICMP6 msg ... error:NoAck
 ```
+This message indicates that the node attempted to transmit, but did not receive confirmation from the other end. As a result, the packet loss percentage increases.
 
-Ese mensaje indica que el nodo intentó transmitir, pero no recibió confirmación del otro extremo. Por eso aumenta el porcentaje de pérdida de paquetes.
+#### 3. Why is IEEE 802.15.4 used instead of WiFi for sensors?
 
-#### 3. ¿Por qué se usa IEEE 802.15.4 en lugar de WiFi para sensores?
+IEEE 802.15.4 is designed for low-power, low-data-rate networks. For agricultural or battery-powered sensors, this is more suitable than WiFi. WiFi can provide higher data rates but consumes more energy. In a sensor network, high speed is usually not required; instead, stability, low power consumption, and the ability to operate for long periods are more important.
 
-IEEE 802.15.4 está diseñado para redes de bajo consumo y baja tasa de datos. Para sensores agrícolas o sensores alimentados por batería, esto es más adecuado que WiFi. WiFi puede entregar más velocidad, pero consume más energía. En una red de sensores, normalmente no se necesita alta velocidad, sino estabilidad, bajo consumo y posibilidad de operar durante largos periodos.
+#### 4. What does selecting the channel with the lowest RSSI mean?
 
-#### 4. ¿Qué significa elegir el canal con menor RSSI?
-
-En el escaneo de energía, el RSSI indica cuánta energía se detecta en cada canal. Esa energía puede venir de otros dispositivos, ruido o interferencias. Un valor más negativo, como -108 dBm, indica un canal más limpio. Por eso el canal 23 fue una buena elección.
+In an energy scan, RSSI indicates how much energy is detected on each channel. This energy can come from other devices, noise, or interference. A more negative value, such as -108 dBm, indicates a cleaner channel. That is why channel 23 was a good choice.
 
 ## 6. RF Scan Results
 
 ### Energy Scan
 
-Comando usado:
+Command used:
 
 ```bash
 ot scan energy 500
@@ -136,15 +134,15 @@ ot scan energy 500
 | 25 | -102 |
 | 26 | -96 |
 
-### Resultado del escaneo
+### Scan Results
 
-* **Canal más limpio:** canal 23
-* **Nivel de energía medido:** -108 dBm
-* **Canales con más interferencia relativa:** canal 13 (-74 dBm), canal 12 (-78 dBm), canal 14 (-81 dBm)
+* **Cleanest channel:** channel 23  
+* **Measured energy level:** -108 dBm  
+* **Channels with higher relative interference:** channel 13 (-74 dBm), channel 12 (-78 dBm), channel 14 (-81 dBm)
 
-### Configuración aplicada
+### Applied Configuration
 
-Comando usado:
+Command used:
 
 ```bash
 ot dataset channel 23
@@ -154,61 +152,60 @@ Con esto se configuró el dataset de Thread para operar en el canal 23.
 
 ## 7. Range Testing Results
 
-### Comando base usado
-
+### Base command used
 ```bash
 ot ping fd16:a9da:52bb:2755:0:ff:fe00:1400 64 100 0.2
 ```
 
-El comando envía 100 paquetes ICMPv6 usando OpenThread. Se usó para medir pérdida de paquetes y tiempo de ida y vuelta.
+The command sends 100 ICMPv6 packets using OpenThread. It was used to measure packet loss and round-trip time.
 
-### Tabla de resultados
+### Results Table
 
-| Distancia | Paquetes transmitidos | Paquetes recibidos | Packet Loss | RTT mínimo | RTT promedio | RTT máximo | Estado |
+| Distance | Packets Sent | Packets Received | Packet Loss | Min RTT | Avg RTT | Max RTT | Status |
 |---:|---:|---:|---:|---:|---:|---:|---|
-| Prueba inicial | 1 | 1 | 0% | 28 ms | 28 ms | 28 ms | Correcto |
-| 1 m | 100 | 100 | 0% | 15 ms | 34.920 ms | 53 ms | Confiable |
-| 5 m | 100 | 100 | 0% | 15 ms | 38.170 ms | 150 ms | Confiable |
-| 10 m | 100 | 100 | 0% | 19 ms | 35.480 ms | 61 ms | Confiable |
-| 15 m | 100 | 61 | 39% | 21 ms | 281.524 ms | 1841 ms | No confiable |
-| 20 m | 100 | 80 | 20% | 15 ms | 97.112 ms | 746 ms | No confiable |
-| 25 m | 100 | 69 | 31% | 24 ms | 220.347 ms | 991 ms | No confiable |
-| 30 m | 100 | 48 | 52% | 15 ms | 128.979 ms | 996 ms | No confiable |
-| 35 m | 100 | 48 | 52% | 24 ms | 203.958 ms | 1061 ms | No confiable |
+| Initial test | 1 | 1 | 0% | 28 ms | 28 ms | 28 ms | Correct |
+| 1 m | 100 | 100 | 0% | 15 ms | 34.920 ms | 53 ms | Reliable |
+| 5 m | 100 | 100 | 0% | 15 ms | 38.170 ms | 150 ms | Reliable |
+| 10 m | 100 | 100 | 0% | 19 ms | 35.480 ms | 61 ms | Reliable |
+| 15 m | 100 | 61 | 39% | 21 ms | 281.524 ms | 1841 ms | Unreliable |
+| 20 m | 100 | 80 | 20% | 15 ms | 97.112 ms | 746 ms | Unreliable |
+| 25 m | 100 | 69 | 31% | 24 ms | 220.347 ms | 991 ms | Unreliable |
+| 30 m | 100 | 48 | 52% | 15 ms | 128.979 ms | 996 ms | Unreliable |
+| 35 m | 100 | 48 | 52% | 24 ms | 203.958 ms | 1061 ms | Unreliable |
 
-### Observación importante
+### Important Observation
 
-Aunque a 20 m la pérdida fue menor que a 15 m, el comportamiento general muestra degradación del enlace cuando aumenta la distancia. Esta diferencia puede deberse a orientación de antenas, reflexiones, obstáculos, multipath o variaciones momentáneas de interferencia. En radiofrecuencia no siempre el deterioro es perfectamente lineal.
+Although the packet loss at 20 m was lower than at 15 m, the overall behavior shows link degradation as distance increases. This difference may be due to antenna orientation, reflections, obstacles, multipath effects, or temporary variations in interference. In radiofrequency, degradation is not always perfectly linear.
 
 ## 8. Performance Baselines
 
 | Metric | Target | Measured | Status |
 |---|---:|---:|---|
-| Lab 1: Max Range | > 20 m | 10 m confiables / 20 m con pérdida alta | [ ] Pass / [x] Partial |
-| Lab 2: Healing Time | < 120 s | No medido en este laboratorio | [ ] Pendiente |
-| Lab 3: CoAP Latency | < 200 ms | No medido en este laboratorio | [ ] Pendiente |
-| Lab 4: Poll Latency | < 5 s | No medido en este laboratorio | [ ] Pendiente |
-| Lab 6: DTLS Time | < 3 s | No medido en este laboratorio | [ ] Pendiente |
+| Lab 1: Max Range | > 20 m | 10 m reliable / 20 m with high loss | [ ] Pass / [x] Partial |
+| Lab 2: Healing Time | < 120 s | Not measured in this lab | [ ] Pending |
+| Lab 3: CoAP Latency | < 200 ms | Not measured in this lab | [ ] Pending |
+| Lab 4: Poll Latency | < 5 s | Not measured in this lab | [ ] Pending |
+| Lab 6: DTLS Time | < 3 s | Not measured in this lab | [ ] Pending |
 
-### Interpretación del baseline
+### Baseline Interpretation
 
-El laboratorio pedía validar un rango mayor a 20 m. Los nodos lograron comunicación a 20 m, pero no de forma confiable porque hubo 20% de pérdida de paquetes. Si el criterio es confiabilidad alta, el rango aceptable medido fue 10 m, ya que hasta esa distancia la pérdida fue 0%.
+The laboratory required validating a range greater than 20 m. The nodes achieved communication at 20 m, but not reliably, as there was 20% packet loss. If the criterion is high reliability, the acceptable measured range was 10 m, since up to that distance the packet loss was 0%.
 
-Por tanto, el resultado debe marcarse como **parcial**: sí hubo comunicación más allá de 20 m, pero no con calidad suficiente para una red de sensores crítica.
+Therefore, the result should be marked as **partial**: communication was achieved beyond 20 m, but not with sufficient quality for a critical sensor network.
 
 ## 9. Link Budget Calculation
 
-Como no se midió el RSSI del enlace punto a punto en cada distancia, el cálculo de presupuesto de enlace se presenta de forma aproximada usando pérdida en espacio libre. Se asume operación en 2.4 GHz.
+Since the RSSI of the point-to-point link was not measured at each distance, the link budget calculation is presented approximately using free-space path loss. Operation at 2.4 GHz is assumed.
 
-La pérdida en espacio libre se estima como:
+The free-space path loss is estimated as:
 
 ```text
 FSPL(dB) = 20 log10(d_km) + 20 log10(f_MHz) + 32.44
 ```
 
-Para 2.4 GHz:
+For 2.4 GHz:
 
-| Distancia | FSPL aproximado |
+| Distance | Approximate FSPL |
 |---:|---:|
 | 1 m | 40.05 dB |
 | 5 m | 54.03 dB |
@@ -219,16 +216,18 @@ Para 2.4 GHz:
 
 ### Análisis
 
-Desde 10 m hasta 20 m la pérdida teórica aumenta cerca de 6 dB. En radiofrecuencia, 6 dB puede ser suficiente para pasar de un enlace estable a un enlace con retransmisiones y pérdidas, especialmente si hay obstáculos, reflexiones o interferencia.
+### Analysis
 
-El cálculo ideal solo considera espacio libre. En un laboratorio real, el comportamiento puede ser peor por:
+From 10 m to 20 m, the theoretical loss increases by approximately 6 dB. In radiofrequency systems, a 6 dB increase can be enough to shift from a stable link to one with retransmissions and packet loss, especially in the presence of obstacles, reflections, or interference.
 
-* paredes,
-* cuerpos humanos cerca de la antena,
-* orientación de los módulos,
-* reflexiones,
-* interferencia WiFi,
-* ruido de otros equipos.
+The ideal calculation only considers free-space conditions. In a real laboratory environment, performance may be worse due to:
+
+* walls,
+* human bodies near the antenna,
+* module orientation,
+* reflections,
+* WiFi interference,
+* noise from other equipment.
 
 ## 10. One-Page Performance Summary
 
