@@ -415,10 +415,3 @@ The strongest result is that the system was fully reliable up to 10 m, with 0% p
 However, the system degraded sharply after 10 m. At 15 m the packet loss was 39%, and at 20 m it was 20%. Although communication was still possible, the reliability was not good enough for a production sensor network. At 30 m and 35 m the packet loss reached 52%, which means almost half of the messages were not received.
 
 The main engineering conclusion is that the ESP32-C6 radio works, but the tested deployment conditions do not support a 20 m reliable spacing. For a real field deployment, the node spacing should be reduced or the network should include more router nodes. Outdoor line-of-sight testing is required before making a final production decision.
-
-## 18. Final Recommendation
-
-Use the ESP32-C6 as a valid platform for short-range Thread communication, but do not assume 20 m reliable spacing based on this test.
-
-This gives a safety margin below the maximum reliable distance measured.
-
