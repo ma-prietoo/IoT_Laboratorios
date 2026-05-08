@@ -205,19 +205,6 @@ This behavior was experimentally validated during the Tractor Test.
 
 ---
 
-# LAB 2 — ISO Mapping
-
-## Domain Mapping
-
-| Component | ISO Domain | Justification |
-|-----------|------------|---------------|
-| Leader Router | SCD | Coordinates mesh communication |
-| Intermediate Router | SCD | Performs forwarding and routing |
-| Child Device | SCD | End sensing/control node |
-| IPv6 Mesh Routing | ASD Enabler | Enables application reachability |
-
----
-
 ## Functional Viewpoint Reflection
 
 ### Leader Role
