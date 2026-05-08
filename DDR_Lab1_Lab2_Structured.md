@@ -324,42 +324,20 @@ This consumes more energy than sleepy end devices.
 
 # 8. Viewpoint Analysis
 
-# LAB 1
-
-| Viewpoint | Concerns |
-|---|---|
-| Foundational | RF propagation and packet loss |
-| Business | Feasibility of ESP32-C6 sensor nodes |
-| Usage | Recommended deployment spacing |
-| Functional | IPv6 communication validation |
-| Trustworthiness | Reliability degradation with distance |
-| Construction | OpenThread + JTAG configuration |
-
----
-
-# LAB 2
-
-| Viewpoint | Concerns |
-|---|---|
-| Foundational | Mesh routing and convergence |
-| Business | Reliability for actuator control |
-| Usage | Recovery after router failure |
-| Functional | Leader and Router responsibilities |
-| Trustworthiness | Resilience and self-healing |
-| Construction | Multi-hop topology creation |
-
----
-
-## 8. Viewpoint Analysis
-
-| Viewpoint | Labs Addressed | Key Concerns Documented |
-|-----------|----------------|-------------------------|
-| Foundational | Lab 1, Lab 2 | RF propagation, packet loss, mesh routing, and convergence |
-| Business | Lab 1, Lab 2 | Feasibility of ESP32-C6 sensor nodes and reliability for actuator control |
-| Usage | Lab 1, Lab 2 | Recommended deployment spacing and recovery after router failure |
-| Functional | Lab 1, Lab 2 | IPv6 communication validation, Leader and Router responsibilities |
-| Trustworthiness | Lab 1, Lab 2 | Reliability degradation with distance, resilience, and self-healing |
-| Construction | Lab 1, Lab 2 | OpenThread + JTAG configuration and multi-hop topology creation |
+| Lab | Viewpoint | Concerns |
+|---|---|---|
+| Lab 1 | Foundational | RF propagation and packet loss |
+| Lab 1 | Business | Feasibility of ESP32-C6 sensor nodes |
+| Lab 1 | Usage | Recommended deployment spacing |
+| Lab 1 | Functional | IPv6 communication validation |
+| Lab 1 | Trustworthiness | Reliability degradation with distance |
+| Lab 1 | Construction | OpenThread + JTAG configuration |
+| Lab 2 | Foundational | Mesh routing and convergence |
+| Lab 2 | Business | Reliability for actuator control |
+| Lab 2 | Usage | Recovery after router failure |
+| Lab 2 | Functional | Leader and Router responsibilities |
+| Lab 2 | Trustworthiness | Resilience and self-healing |
+| Lab 2 | Construction | Multi-hop topology creation |
 
 ---
 
