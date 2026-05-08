@@ -315,17 +315,10 @@ This consumes more energy than sleepy end devices.
 
 # 7. Ethics & Sustainability Checklist
 
-# LAB 1
-
-- [x] Verified that interference did not disrupt other groups.
-- [x] Passive energy scans were used.
-
----
-
-# LAB 2
-
-- [x] Resilience tests did not intentionally interfere with other groups.
-- [x] Router was disabled after testing to reduce spectrum occupation and save energy.
+- [x] *Lab 1:* Verified that interference did not disrupt other groups.
+- [x] *Lab 1:* Passive energy scans were used.
+- [x] *Lab 2:* Resilience tests did not intentionally interfere with other groups.
+- [x] *Lab 2:* Router was disabled after testing to reduce spectrum occupation and save energy.
 
 ---
 
