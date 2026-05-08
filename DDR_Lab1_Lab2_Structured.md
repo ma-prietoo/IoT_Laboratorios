@@ -247,33 +247,73 @@ The signal-to-noise ratio decreases, making packet decoding more difficult. This
 
 ---
 
-# LAB 2
+### LAB 2
 
-## 1. Why does mesh networking improve resilience?
+## 5. First Principles Reflections
 
-In a mesh topology, communication does not depend on a single central node. Multiple routers can forward packets dynamically.
+### Lab 1
+
+#### 1. Why does the signal weaken as distance increases?
+
+A radio signal propagates as an electromagnetic wave. As it moves away from the transmitter, its energy spreads over a larger area. Therefore, the received power decreases with distance. In free space, this decay can be approximated by a quadratic relationship: if the distance is doubled, the received power decreases significantly.
+
+In practical terms, as the nodes move farther apart, the receiver gets a weaker signal. If the signal becomes too close to the noise floor or environmental interference, retransmissions, higher delays, and packet loss occur.
+
+#### 2. Why does a greater distance lead to higher packet loss?
+
+As distance increases, the signal-to-noise ratio decreases. This means the receiver has more difficulty distinguishing useful information from background noise. When the receiver cannot correctly decode a packet, it does not send an acknowledgment (ACK). In the tests, this was observed with messages such as:
+```text
+MeshForwarder: Failed to send IPv6 ICMP6 msg ... error:NoAck
+```
+This message indicates that the node attempted to transmit, but did not receive confirmation from the other end. As a result, the packet loss percentage increases.
+
+#### 3. Why is IEEE 802.15.4 used instead of WiFi for sensors?
+
+IEEE 802.15.4 is designed for low-power, low-data-rate networks. For agricultural or battery-powered sensors, this is more suitable than WiFi. WiFi can provide higher data rates but consumes more energy. In a sensor network, high speed is usually not required; instead, stability, low power consumption, and the ability to operate for long periods are more important.
+
+#### 4. What does selecting the channel with the lowest RSSI mean?
+
+In an energy scan, RSSI indicates how much energy is detected on each channel. This energy can come from other devices, noise, or interference. A more negative value, such as -108 dBm, indicates a cleaner channel. That is why channel 23 was a good choice.
+
+### Lab 2
+
+#### 1. Why does mesh networking improve resilience?
+
+In a mesh topology, packets can travel through intermediate routers instead of depending on a single gateway. If one node fails, the routing tables can eventually adapt and establish another communication path.
+
+This makes the network more fault tolerant than a star topology.
 
 ---
 
-## 2. Why does multi-hop increase latency?
+#### 2. Why does multi-hop communication increase latency?
 
-Each hop introduces:
+Every hop introduces additional:
 
-- forwarding delay,
-- MAC-layer waiting time,
-- retransmissions,
-- and processing overhead.
+- transmission delay,
+- processing delay,
+- ACK waiting time,
+- and MAC-layer contention.
+
+Therefore:
+
+```text
+More hops → Higher RTT
+```
+
+This behavior was experimentally observed during the laboratory.
 
 ---
 
-## 3. Why do routers consume more power?
+#### 3. Why do routers consume more energy?
 
-A Thread router must keep its radio active continuously to:
+Routers must keep their radios active continuously in order to:
 
 - listen for packets,
-- forward traffic,
 - maintain neighbor tables,
+- forward traffic,
 - and participate in routing.
+
+This consumes more energy than sleepy end devices.
 
 ---
 
