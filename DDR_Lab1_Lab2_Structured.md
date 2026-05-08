@@ -350,24 +350,16 @@ This consumes more energy than sleepy end devices.
 
 ---
 
-# 9. Trustworthiness Audit
+## 8. Viewpoint Analysis
 
-# LAB 1
-
-| Characteristic | Addressed? | How | Gaps |
-|---|---|---|---|
-| Reliability | Yes | Packet loss measured | Outdoor testing pending |
-| Safety | Yes | Passive energy scan | None identified |
-
----
-
-# LAB 2
-
-| Characteristic | Addressed? | How | Gaps |
-|---|---|---|---|
-| Availability | Yes | Mesh recovery tested | Larger mesh pending |
-| Resilience | Yes | Tractor Test completed | More alternate routes needed |
-| Reliability | Yes | RTT and packet loss measured | Outdoor testing pending |
+| Viewpoint | Labs Addressed | Key Concerns Documented |
+|-----------|----------------|-------------------------|
+| Foundational | Lab 1, Lab 2 | RF propagation, packet loss, mesh routing, and convergence |
+| Business | Lab 1, Lab 2 | Feasibility of ESP32-C6 sensor nodes and reliability for actuator control |
+| Usage | Lab 1, Lab 2 | Recommended deployment spacing and recovery after router failure |
+| Functional | Lab 1, Lab 2 | IPv6 communication validation, Leader and Router responsibilities |
+| Trustworthiness | Lab 1, Lab 2 | Reliability degradation with distance, resilience, and self-healing |
+| Construction | Lab 1, Lab 2 | OpenThread + JTAG configuration and multi-hop topology creation |
 
 ---
 
