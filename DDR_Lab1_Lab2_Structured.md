@@ -179,16 +179,18 @@ This behavior was experimentally validated during the Tractor Test.
 
 # 4. ISO/IEC 30141 Mapping
 
-# LAB 1 — ISO Mapping
-
 ## Domain Mapping
 
-| Component | ISO Domain | Justification |
-|-----------|------------|---------------|
-| ESP32-C6 SoC | SCD | Sensing/Controlling device |
-| 802.15.4 Radio | SCD | Communication subsystem |
-| Antenna | SCD | Physical interface |
-| Air (RF medium) | PED | Electromagnetic propagation |
+| Component | ISO Domain | Justification | Lab Introduced |
+|-----------|------------|---------------|----------------|
+| ESP32-C6 SoC | SCD | Sensing/Controlling device | Lab 1 |
+| 802.15.4 Radio | SCD | Communication subsystem | Lab 1 |
+| Antenna | SCD | Physical interface | Lab 1 |
+| Air (RF medium) | PED | Electromagnetic propagation | Lab 1 |
+| Leader Router | SCD | Coordinates mesh communication | Lab 2 |
+| Intermediate Router | SCD | Performs forwarding and routing | Lab 2 |
+| Child Device | SCD | End sensing/control node | Lab 2 |
+| IPv6 Mesh Routing | ASD Enabler | Enables application reachability | Lab 2 |
 
 ---
 
@@ -196,10 +198,10 @@ This behavior was experimentally validated during the Tractor Test.
 
 | Capability Category | Subcategory | Component/Feature | Active/Latent | Lab Introduced |
 |---------------------|-------------|-------------------|---------------|----------------|
-| Processing | Embedded control | ESP32-C6 SoC | Active | Lab 1 |
-| Communication | RF transmission | 802.15.4 Radio | Active | Lab 1 |
-| Communication | Physical interface | Antenna | Active | Lab 1 |
-| Transfer | RF propagation | Air medium | Latent | Lab 1 |
+| Processing | Embedded control | ESP32-C6 SoC | Active | Lab 1 y 2 |
+| Communication | RF transmission | 802.15.4 Radio | Active | Lab 1 y 2 |
+| Communication | Physical interface | Antenna | Active | Lab 1 y 2 |
+| Transfer | RF propagation | Air medium | Latent | Lab 1 y 2 |
 
 ---
 
