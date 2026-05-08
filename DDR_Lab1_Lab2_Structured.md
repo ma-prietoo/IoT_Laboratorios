@@ -341,30 +341,21 @@ This consumes more energy than sleepy end devices.
 
 ---
 
-# 10. Construction Viewpoint - IoT System Pattern
+# 9. Construction Viewpoint - IoT System Pattern
 
-# LAB 1
-
-| Pattern Element | Your System |
-|---|---|
-| IoT Components | ESP32-C6 |
-| Digital Network | IEEE 802.15.4 |
-| Communication | IPv6 ping |
-
----
-
-# LAB 2
-
-| Pattern Element | Your System |
-|---|---|
-| IoT System | Distributed IoT |
-| Digital Network | Thread/OpenThread Mesh |
-| IoT Devices | Leader + Routers |
-| Communication | IPv6 Multi-hop Routing |
+| Pattern Element | Category | Your System |
+|---|---|---|
+| IoT Components | Device | ESP32-C6 |
+| Digital Network | Network | IEEE 802.15.4 |
+| Communication | Application/Communication | IPv6 ping |
+| IoT System | System | Distributed IoT |
+| Digital Network | Network | Thread/OpenThread Mesh |
+| IoT Devices | Device | Leader + Routers |
+| Communication | Application/Communication | IPv6 Multi-hop Routing |
 
 ---
 
-# 11. LAB 1 — Final Analysis
+# 10. LAB 1 — Final Analysis
 
 The laboratory successfully validated the RF operation of the ESP32-C6 using OpenThread.
 
@@ -378,7 +369,7 @@ The laboratory demonstrated the practical importance of channel selection and RF
 
 ---
 
-# 12. LAB 2 — Final Analysis
+# 11. LAB 2 — Final Analysis
 
 The laboratory successfully demonstrated resilient Thread mesh networking using ESP32-C6 devices and OpenThread.
 
