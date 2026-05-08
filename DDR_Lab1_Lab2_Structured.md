@@ -355,7 +355,7 @@ This consumes more energy than sleepy end devices.
 
 ---
 
-# 10. LAB 1 — Final Analysis
+# 10. Final Analysis
 
 The laboratory successfully validated the RF operation of the ESP32-C6 using OpenThread.
 
@@ -367,11 +367,7 @@ As the distance increased, packet loss and RTT also increased due to weaker sign
 
 The laboratory demonstrated the practical importance of channel selection and RF characterization before deploying a sensor network.
 
----
-
-# 11. LAB 2 — Final Analysis
-
-The laboratory successfully demonstrated resilient Thread mesh networking using ESP32-C6 devices and OpenThread.
+The laboratory also successfully demonstrated resilient Thread mesh networking using ESP32-C6 devices and OpenThread.
 
 A forced multi-hop topology was created and validated experimentally using routing and neighbor tables.
 
@@ -383,8 +379,3 @@ The measured convergence time was approximately:
 
 ```text
 64 seconds
-```
-
-which satisfies the requirement of recovery in less than 120 seconds.
-
-Compared with single-hop communication, multi-hop routing increased RTT and packet loss, but performance remained acceptable for actuator-control applications.
