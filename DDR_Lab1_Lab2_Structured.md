@@ -251,7 +251,7 @@ The signal-to-noise ratio decreases, making packet decoding more difficult. This
 
 ## 5. First Principles Reflections
 
-### Lab 1
+# Lab 1
 
 #### 1. Why does the signal weaken as distance increases?
 
