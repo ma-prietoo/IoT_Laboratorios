@@ -235,24 +235,6 @@ The Router role supports communication continuity inside the Sensing & Controlli
 
 # LAB 1
 
-## 1. Why does signal strength decrease with distance?
-
-Electromagnetic energy spreads over a larger area as the wave propagates. Therefore, the received power decreases with increasing distance.
-
----
-
-## 2. Why does packet loss increase at larger distances?
-
-The signal-to-noise ratio decreases, making packet decoding more difficult. This causes retransmissions and `NoAck` errors.
-
----
-
-### LAB 2
-
-## 5. First Principles Reflections
-
-# Lab 1
-
 #### 1. Why does the signal weaken as distance increases?
 
 A radio signal propagates as an electromagnetic wave. As it moves away from the transmitter, its energy spreads over a larger area. Therefore, the received power decreases with distance. In free space, this decay can be approximated by a quadratic relationship: if the distance is doubled, the received power decreases significantly.
@@ -275,7 +257,7 @@ IEEE 802.15.4 is designed for low-power, low-data-rate networks. For agricultura
 
 In an energy scan, RSSI indicates how much energy is detected on each channel. This energy can come from other devices, noise, or interference. A more negative value, such as -108 dBm, indicates a cleaner channel. That is why channel 23 was a good choice.
 
-### Lab 2
+# LAB 2
 
 #### 1. Why does mesh networking improve resilience?
 
