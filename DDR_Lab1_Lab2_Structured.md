@@ -133,9 +133,7 @@ Channel 23 showed the lowest detected energy level during the scan, at:
 
 A more negative value indicates lower interfering energy on that channel.
 
-### Status
-
-[x] Accepted
+* **Status:** [ ] Proposed | [x] Accepted | [ ] Deprecated
 
 ---
 
