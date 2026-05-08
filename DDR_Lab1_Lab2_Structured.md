@@ -173,7 +173,7 @@ This behavior was experimentally validated during the Tractor Test.
 
 ### Status
 
-[x] Accepted
+* **Status:** [ ] Proposed | [x] Accepted | [ ] Deprecated
 
 ---
 
