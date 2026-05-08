@@ -301,22 +301,15 @@ This consumes more energy than sleepy end devices.
 
 # 6. Performance Baselines
 
-# LAB 1 — RF Performance
-
 | Metric | Target | Measured | Status |
-|---|---|---|---|
-| Reliable RF Range | > 20 m | 10 m reliable | Partial |
-| Best Channel | Lowest interference | Channel 23 (-108 dBm) | PASS |
-
----
-
-# LAB 2 — Mesh Performance
-
-| Metric | Target | Measured | Status |
-|---|---|---|---|
-| Healing Time | < 120 s | 64 s | PASS |
-| Multi-hop RTT | Acceptable | ~102 ms avg | PASS |
-| Mesh Recovery | Automatic | Successful | PASS |
+|--------|--------|----------|--------|
+| Lab 1: Max Range | > 20 m | 10 m reliable | Partial |
+| Lab 2: Healing Time | < 120 s | 64 s | [x] Pass |
+| Lab 2: Multi-hop RTT | Acceptable | ~102 ms avg | [x] Pass |
+| Lab 2: Mesh Recovery | Automatic | Successful | [x] Pass |
+| Lab 3: CoAP Latency | < 200 ms | ___ ms | [ ] Pass |
+| Lab 4: Poll Latency | < 5 s | ___ s | [ ] Pass |
+| Lab 6: DTLS Time | < 3 s | ___ s | [ ] Pass |
 
 ---
 
