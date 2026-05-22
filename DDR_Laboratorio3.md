@@ -515,23 +515,7 @@ At the measured Observe notification rate, saving `50 ms` of radio time per tran
 
 ---
 
-# 9. Construction Viewpoint - IoT System Pattern
-
-| Pattern Element | Category | Your System |
-|---|---|---|
-| IoT Components | Device | ESP32-C6 |
-| Digital Network | Network | IEEE 802.15.4 |
-| Communication | Application/Communication | IPv6 ping |
-| IoT System | System | Distributed IoT |
-| Digital Network | Network | Thread/OpenThread Mesh |
-| IoT Devices | Device | Leader + Routers |
-| Communication | Application/Communication | IPv6 Multi-hop Routing |
-| Application Interface | Interface | CoAP `/env/temp` with `GET` and Observe |
-| Application Data | Processing | CBOR float16 temperature body documented by CDDL |
-
----
-
-# 10. Final Analysis
+# 9. Final Analysis
 
 ## Lab 1 - RF Characterization
 
