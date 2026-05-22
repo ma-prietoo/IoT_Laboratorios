@@ -249,19 +249,6 @@ MQTT was not selected for the radio side because its apparently competitive byte
 
 ---
 
-## Functional Viewpoint
-
-The Lab 2 Thread mesh belongs to the Sensing and Controlling Domain (SCD), but its behavior is described more precisely by functional responsibilities than by node roles alone.
-
-| Functional Component | Lab 2 Element | Function in the SCD | Evidence |
-|---|---|---|---|
-| Network Management | Leader role on Node A | Coordinates the Thread network, maintains dataset state, and participates in router allocation. | `ot state`, active dataset, leader logs |
-| Routing and Forwarding | Router role on Node B | Forwards IPv6 packets through the mesh and rebuilds reachability when the route changes. | neighbor table, router table, Tractor Test |
-| Sensing/Control Endpoint | Final Thread node / child-capable device | Represents the field endpoint that must remain reachable for sensing or control traffic. | ping reachability and recovery test |
-| Communication Interface | IEEE 802.15.4 + 6LoWPAN + Thread | Carries compressed IPv6 traffic among SCD devices over the low-power radio link. | OpenThread communication tests |
-
-This Functional Viewpoint separates the ISO/IEC 30141 responsibilities that were previously described only as Leader, Router, and Child roles. The Leader is not a separate domain: it implements network-management behavior inside the SCD. The Router implements routing and forwarding in the same domain, while the endpoint represents the sensing or control participant that depends on the communication subsystem.
-
 ## Application Service Contract - Lab 3
 
 | Contract Field | Lab 3 Definition |
@@ -517,26 +504,14 @@ At the measured Observe notification rate, saving `50 ms` of radio time per tran
 
 # 8. Viewpoint Analysis
 
-| Lab | Viewpoint | Concerns |
-|---|---|---|
-| Lab 1 | Foundational | RF propagation and packet loss |
-| Lab 1 | Business | Feasibility of ESP32-C6 sensor nodes |
-| Lab 1 | Usage | Recommended deployment spacing |
-| Lab 1 | Functional | IPv6 communication validation |
-| Lab 1 | Trustworthiness | Reliability degradation with distance |
-| Lab 1 | Construction | OpenThread + JTAG configuration |
-| Lab 2 | Foundational | Mesh routing and convergence |
-| Lab 2 | Business | Reliability for actuator control |
-| Lab 2 | Usage | Recovery after router failure |
-| Lab 2 | Functional | Network management, routing/forwarding, and endpoint reachability in the SCD |
-| Lab 2 | Trustworthiness | Resilience and self-healing |
-| Lab 2 | Construction | Multi-hop topology creation |
-| Lab 3 | Foundational | CoAP/UDP, CBOR, Observe, and Thread/6LoWPAN overhead reduction |
-| Lab 3 | Business | Battery-life concern for Daniela and lower ingress bandwidth |
-| Lab 3 | Usage | `GET` once or subscribe with Observe for change-driven updates |
-| Lab 3 | Functional | ASD sensor-service contract separated from Thread MLE management |
-| Lab 3 | Trustworthiness | Publishable CDDL contract makes compact binary readings transparent |
-| Lab 3 | Construction | ESP32-C6 OpenThread CLI plus libcoap server on `/env/temp` |
+| Viewpoint | Labs Addressed | Key Concerns Documented |
+|-----------|----------------|-------------------------|
+| Foundational | Labs 1, 2, 3 | RF propagation and packet loss; Thread mesh routing and convergence; why CoAP/UDP, CBOR, Observe, and 6LoWPAN reduce constrained-network overhead. |
+| Business | Labs 1, 2, 3 | ESP32-C6 sensor-node feasibility; resilient actuator communication; Daniela's battery-life concern and lower ingress bandwidth. |
+| Usage | Labs 1, 2, 3 | Recommended deployment spacing; recovery after router failure; `GET` for one read or Observe for change-driven updates. |
+| Functional | Labs 1, 2, 3 | IPv6 communication validation; SCD network management, routing/forwarding, and endpoint reachability; ASD sensor-service contract separated from Thread MLE management. |
+| Trustworthiness | Labs 1, 2, 3 | Reliability degradation with distance; self-healing resilience; transparent compact data through the published `/env/temp` CBOR/CDDL contract. |
+| Construction | Labs 1, 2, 3 | OpenThread + JTAG setup; forced multi-hop topology; ESP32-C6 OpenThread CLI plus libcoap server on `/env/temp`. |
 
 ---
 
