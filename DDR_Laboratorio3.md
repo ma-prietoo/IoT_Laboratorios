@@ -18,9 +18,8 @@ This DDR documents the complete results from:
 - Lab 1: RF Characterization
 - Lab 2: 6LoWPAN Mesh Networking & Resilience
 - Lab 3: Efficient Data Transport with CoAP and CBOR
-- Lab 4: Reliable Downlink & Actuator Control with CoAP CON
 
-The project validates IEEE 802.15.4 communication using ESP32-C6 devices and OpenThread, then extends that Thread mesh with compact ASD service contracts for `/env/temp` and `/act/valve` using CoAP/UDP, CBOR, Observe, and Confirmable downlink commands.
+The project validates IEEE 802.15.4 communication using ESP32-C6 devices and OpenThread, then extends that Thread mesh with a compact ASD sensor-service contract for `/env/temp` using CoAP/UDP, CBOR, and Observe.
 
 ---
 
@@ -112,18 +111,6 @@ Thread mesh networking should be preferred over star topologies for agricultural
 One sensor reading became much smaller on the radio side. The measured CoAP/CBOR exchange used a six-byte payload and an estimated `~36 B` compressed Thread/6LoWPAN on-wire cost, while the earlier HTTP/JSON exchange costs about `~500 B`; for one reading, CoAP is therefore about `14x` smaller than HTTP.
 
 Observe also kept the radio from being awakened by constant application polling. During a measured `342.534 s` window, Node B received one initial Observe response and `29` change notifications, while a `1 Hz` polling client would have sent about `343` GET requests; after subscription, that is about `5.08` threshold notifications per minute instead of `60` polling GETs per minute, reducing repeated application exchanges by about `91.55%` and improving battery endurance for SoilSense nodes.
-
----
-
-# LAB 4 — Downlink & CON
-
-## To Edwin (Ops)
-
-The sleeping valve was controlled successfully through the `/act/valve` CoAP resource. From Node B, a Confirmable `PUT` with `a1617601` opened the valve, `GET act/valve` returned `a1617601`, a second `PUT` with `a1617600` closed it, and a final `GET` returned `a1617600`. Node V's monitor confirmed `valve -> OPEN (GPIO8 = 1)` and `valve -> CLOSED (GPIO8 = 0)`, so the command path and state readback both worked.
-
-Reliability under loss was validated by disabling Node V with `thread stop`, then sending a Confirmable `PUT` from Node B. Node B logged `coap receive response error 28: ResponseTimeout`, proving that the client did not silently assume success when the valve was unreachable. After Node V rejoined as `child`, the same `PUT` succeeded and Node V logged `valve -> OPEN`, so the recovery path was verified. For field use, a `5 s` SED poll period is recommended: it gives a defensible worst-case command delay of about `5 s`, while the estimated poll-only battery life is about `672 days` on 2xAA cells.
-
-User-domain impact: Edwin gets a visible command result and a bounded delay instead of an unknown actuator state; Daniela gets a battery-aware configuration rather than a permanently awake valve. The older rubric names the actuator resource as `/farm/valve`; this implementation follows the updated Lab 4 contract `/act/valve` with the same PUT/GET actuator semantics.
 
 ---
 
@@ -225,34 +212,6 @@ MQTT was not selected for the radio side because its apparently competitive byte
 
 ---
 
-# LAB 4 — ADRs
-
-## ADR-004: Poll Period for SED Actuators
-
-### Context
-
-Edwin reported that the irrigation command was delayed because the valve node sleeps most of the time. Daniela also cares about battery life, so the valve cannot simply keep its radio always on. Lab 4 tested the valve as a Sleepy End Device (SED): Node V receives downlink commands only after waking and polling its parent mailbox.
-
-### Decision
-
-Use a `5 s` SED poll period for field actuator nodes.
-
-### Rationale
-
-Task C tested `1 s`, `5 s`, and `30 s` poll periods. The observed command responses were fast in the measured trials because the commands happened near a poll instant, but the operational worst-case latency is bounded by the poll period: about `1 s`, `5 s`, and `30 s`, respectively. A `1 s` poll is more responsive but wakes the radio five times more often than the `5 s` setting. A `30 s` poll maximizes battery life but is too slow for a manual irrigation command.
-
-Using a conservative `10 ms` radio-on poll handshake, `I_RX = 75 mA`, `I_sleep = 0.005 mA`, and `2500 mAh` for 2xAA cells in series, the estimated poll-only battery lives are about `138 days` at `1 s`, `672 days` at `5 s`, and `3472 days` at `30 s`. The `5 s` choice keeps Edwin's worst-case downlink delay short enough for field operation while preserving a large battery-life margin.
-
-### User Domain Mapping
-
-Edwin's user-domain requirement is operational confidence: after tapping "open", the system must either confirm the command path or report failure. A `5 s` poll period keeps the expected manual-control delay short enough for field operation and below the lab's `< 30 s` downlink target. Daniela's user-domain requirement is battery sustainability: the `5 s` option avoids the `1 s` poll's higher wake-up cost while remaining much more usable than `30 s`.
-
-### Status
-
-* **Status:** [ ] Proposed | [x] Accepted | [ ] Deprecated
-
----
-
 # 4. ISO/IEC 30141 Mapping
 
 ## Domain Mapping
@@ -271,10 +230,6 @@ Edwin's user-domain requirement is operational confidence: after tapping "open",
 | CBOR payload contract | ASD | Defines the application data representation consumed by CoAP clients | Lab 3 |
 | CDDL schema for `env-reading` | ASD | Makes the compact binary payload transparent and independently decodable | Lab 3 |
 | UDP over Thread | SCD | Carries CoAP datagrams through the constrained device communication subsystem | Lab 3 |
-| `/act/valve` CoAP resource | ASD | Published application-service endpoint for valve actuation | Lab 4 |
-| CDDL schema for `valve-cmd` | ASD | Documents the compact command body `{v: 0|1}` | Lab 4 |
-| CoAP CON retransmission | ASD | Application-service reliability mechanism for confirmable actuator commands | Lab 4 |
-| SED parent-poll mechanism | SCD | Communication-subsystem behavior that determines when a sleeping child receives downlink traffic | Lab 4 |
 
 ---
 
@@ -291,25 +246,8 @@ Edwin's user-domain requirement is operational confidence: after tapping "open",
 | Documentation | Data contract | CDDL `env-reading` schema | Active | Lab 3 |
 | Transferring | Change-driven delivery | CoAP Observe | Active | Lab 3 |
 | Communication | Datagram transport | UDP over Thread | Active | Lab 3 |
-| Interface | Actuator control interface | CoAP `/act/valve` | Active | Lab 4 |
-| Processing | Command encoding | CBOR valve command `{v: 0|1}` | Active | Lab 4 |
-| Reliability | Confirmable delivery | CoAP CON request and response timeout | Active | Lab 4 |
-| Communication | Sleepy downlink polling | SED parent mailbox and poll period | Active | Lab 4 |
 
 ---
-
-## Functional Viewpoint
-
-The Lab 2 Thread mesh belongs to the Sensing and Controlling Domain (SCD), but its behavior is described more precisely by functional responsibilities than by node roles alone.
-
-| Functional Component | Lab 2 Element | Function in the SCD | Evidence |
-|---|---|---|---|
-| Network Management | Leader role on Node A | Coordinates the Thread network, maintains dataset state, and participates in router allocation. | `ot state`, active dataset, leader logs |
-| Routing and Forwarding | Router role on Node B | Forwards IPv6 packets through the mesh and rebuilds reachability when the route changes. | neighbor table, router table, Tractor Test |
-| Sensing/Control Endpoint | Final Thread node / child-capable device | Represents the field endpoint that must remain reachable for sensing or control traffic. | ping reachability and recovery test |
-| Communication Interface | IEEE 802.15.4 + 6LoWPAN + Thread | Carries compressed IPv6 traffic among SCD devices over the low-power radio link. | OpenThread communication tests |
-
-This Functional Viewpoint separates the ISO/IEC 30141 responsibilities that were previously described only as Leader, Router, and Child roles. The Leader is not a separate domain: it implements network-management behavior inside the SCD. The Router implements routing and forwarding in the same domain, while the endpoint represents the sensing or control participant that depends on the communication subsystem.
 
 ## Application Service Contract - Lab 3
 
@@ -337,37 +275,6 @@ CDDL schema:
 ```cddl
 env-reading = {
   t: float16   ; air temperature, degrees Celsius
-}
-```
-
-## Application Service Contract - Lab 4
-
-| Contract Field | Lab 4 Definition |
-|---|---|
-| Resource | `/act/valve` |
-| Transport | CoAP / UDP / port `5683` |
-| Methods | `PUT` (CON), `GET` |
-| Content-Format | `60` (`application/cbor`) |
-| Idempotency | Repeating `PUT {v:1}` leaves the valve open; repeating `PUT {v:0}` leaves it closed |
-| Success response | `2.04 Changed` on `PUT`, `2.05 Content` on `GET` |
-| Bad payload | `4.00 Bad Request` |
-| Unsupported method | `4.05 Method Not Allowed` |
-
-Resource naming note: the current Lab 4 guide specifies `/act/valve`; the older grading text refers to `/farm/valve`. The validated behavior is the required actuator resource behavior: Confirmable `PUT` changes the valve state and `GET` reports it.
-
-CBOR payload byte layout:
-
-```text
-A1            map(1)
-61 76         text(1) "v"
-0X            unsigned 0 or 1
-```
-
-CDDL schema:
-
-```cddl
-valve-cmd = {
-  v: 0 / 1   ; 0 = closed, 1 = open
 }
 ```
 
@@ -439,53 +346,6 @@ The prefix `A1 61 74 F9` matches the published CBOR contract for a one-entry map
 | **Estimated compressed on-wire total** | **~36 B** |
 
 * MQTT counts one packet per reading after connection setup, but startup connection traffic and periodic keepalives remain part of the radio energy budget.
-
-## Lab 4 Technical Checks
-
-### Task A - `/act/valve` Round Trip
-
-Node V joined the Thread network as a sleepy child and advertised the mesh-local EID:
-
-```text
-fde4:9792:435e:fe56:a750:61f0:66af:45c9
-```
-
-Node B sent:
-
-```text
-ot coap put fde4:9792:435e:fe56:a750:61f0:66af:45c9 act/valve con a1617601
-ot coap get fde4:9792:435e:fe56:a750:61f0:66af:45c9 act/valve
-ot coap put fde4:9792:435e:fe56:a750:61f0:66af:45c9 act/valve con a1617600
-ot coap get fde4:9792:435e:fe56:a750:61f0:66af:45c9 act/valve
-```
-
-Node B received `a1617601` after the open command and `a1617600` after the close command. Node V logged `valve -> OPEN (GPIO8 = 1)`, `GET /act/valve -> 1`, `valve -> CLOSED (GPIO8 = 0)`, and `GET /act/valve -> 0`.
-
-### Task B - CON Reliability Under Loss
-
-Node V was disabled with `ot thread stop`, leaving it in `state disabled`. Node B then sent a Confirmable `PUT` and logged:
-
-```text
-coap receive response error 28: ResponseTimeout
-```
-
-This confirms that the client detected the missing ACK/response rather than assuming actuation success. After Node V rejoined as `child`, the same command received a CoAP response and Node V logged `valve -> OPEN (GPIO8 = 1)`.
-
-For the Wireshark/packet-capture deliverable, the expected successful recovery exchange is a CoAP Confirmable `PUT` from Node B to Node V on UDP port `5683`, followed by a CoAP ACK carrying the success response (`2.04 Changed`) from Node V back to Node B. The serial evidence captured the same reliability event at the endpoint level: timeout while Node V was disabled and successful response after recovery.
-
-### Task C - SED Poll Period vs Latency
-
-| `poll_period` | Observed command-response latency | Operational worst-case by policy |
-|---|---:|---:|
-| `1 s` | `< 1 s` | `~1 s` |
-| `5 s` | `~1 s` worst observed across repeated trials | `~5 s` |
-| `30 s` | `< 1 s` in three observed trials | `~30 s` |
-
-The measured trials landed close to Node V's parent-poll instant, so the observed values are below the operational worst case. The defensible worst-case bound is approximately one poll period plus small mesh processing time.
-
-### SCD Actuation and Feedback Loop
-
-Node V validates the Sensing and Controlling Domain because it turns an application command into a physical actuator state on GPIO8. The feedback loop is: Node B sends Confirmable `PUT`, Node V applies the valve state, CoAP returns a response/ACK, and Node B can issue `GET` to read back the stored state. When Node V is unreachable, `ResponseTimeout` breaks the loop explicitly instead of hiding the failure.
 
 ---
 
@@ -573,22 +433,6 @@ CBOR is not a custom binary format because it is a standardized data representat
 
 ---
 
-# LAB 4
-
-#### 1. Why is PUT safe to retransmit but POST is not?
-
-`PUT {v:1}` sets the valve to a target state, so sending the same command twice still leaves the valve open; a `POST` usually asks the server to create or trigger a new action, so duplicates can cause repeated side effects.
-
-#### 2. Why does CON exponential backoff fit a lossy radio better than fixed retry?
-
-Exponential backoff retries quickly at first but then spaces attempts out, which avoids flooding a weak IEEE 802.15.4 link while still giving transient loss a chance to recover.
-
-#### 3. Why is the SED poll period a policy, not a CoAP parameter?
-
-The poll period belongs to the Thread child-parent communication subsystem: it decides when the sleepy radio wakes to ask for mail, while CoAP only defines the request, response, and confirmable-message behavior.
-
----
-
 # 6. Performance Baselines
 
 | Metric | Target | Measured | Status |
@@ -598,7 +442,7 @@ The poll period belongs to the Thread child-parent communication subsystem: it d
 | Lab 2: Multi-hop RTT | Acceptable | ~102 ms avg | [x] Pass |
 | Lab 2: Mesh Recovery | Automatic | Successful | [x] Pass |
 | Lab 3: CoAP Latency | < 200 ms | ~44 ms avg | [x] Pass |
-| Lab 4: Downlink Latency | < 30 s at 5 s poll | ~5 s worst-case by poll policy; ~1 s worst observed | [x] Pass |
+| Lab 4: Poll Latency | < 5 s | ___ s | [ ] Pass |
 | Lab 6: DTLS Time | < 3 s | ___ s | [ ] Pass |
 
 Lab 3 `coap get` RTT samples:
@@ -623,10 +467,6 @@ Lab 3 `coap get` RTT samples:
 - [x] *Lab 2:* Router was disabled after testing to reduce spectrum occupation and save energy.
 - [x] *Lab 3:* Observe reduced traffic from `343` hypothetical `1 Hz` polling GETs to `29` threshold notifications after the initial subscription response, a reduction of about `91.55%`.
 - [x] *Lab 3:* The `/env/temp` resource contract, CBOR byte layout, Content-Format, and CDDL schema are documented so another client can decode the reading.
-- [x] *Lab 4:* The valve command is idempotent and uses Confirmable CoAP so lost downlink delivery is detected by timeout.
-- [x] *Lab 4:* A default-closed actuator failsafe is required: if the valve receives `OPEN` but the network dies before a `CLOSE`, firmware should close automatically after a maximum irrigation window using a local watchdog timer.
-- [x] *Lab 4:* A `1 s` poll period is only defensible for urgent operations because it reduces poll-only battery life by about `5x` compared with `5 s`; `5 s` is the recommended field trade-off.
-- [x] *Lab 4:* Privacy was preserved during downlink tests: no additional uplink sensing data was collected, and the only observed values were valve command state, CoAP response status, Thread role, and timing/log metadata needed for reliability analysis.
 
 ## Lab 3 Energy Calculation
 
@@ -660,67 +500,22 @@ saved charge = 74 mA x 37.08 h
 
 At the measured Observe notification rate, saving `50 ms` of radio time per transmission preserves about `37.08 h` of RX radio-on time or about `2.74 Ah` of battery charge over one year. The exact added operating lifetime depends on the selected battery capacity and the rest of the node power budget.
 
-## Lab 4 Energy Calculation
-
-Assumptions for the SED poll cost:
-
-```text
-I_RX = 75 mA
-I_sleep = 0.005 mA
-t_radio_on_per_poll = 10 ms = 0.01 s
-battery = 2500 mAh for 2xAA in series
-```
-
-Duty cycle and battery life:
-
-```text
-duty_cycle = t_radio_on_per_poll / poll_period
-I_avg = (I_RX x duty_cycle) + (I_sleep x (1 - duty_cycle))
-battery_life_days = 2500 mAh / I_avg / 24
-```
-
-| `poll_period` | Worst-case latency used for design | Duty cycle | Estimated average current | Estimated battery life |
-|---|---:|---:|---:|---:|
-| `1 s` | `~1 s` | `1.000%` | `0.755 mA` | `~138 days` |
-| `5 s` | `~5 s` | `0.200%` | `0.155 mA` | `~672 days` |
-| `30 s` | `~30 s` | `0.033%` | `0.030 mA` | `~3472 days` |
-
-At the selected `5 s` poll period, the bare SED poll is the dominant radio-energy term compared with Lab 3 Observe traffic. Lab 3 Observe sends application data only on threshold changes, while the SED poll occurs continuously even when no actuator command is waiting.
-
 ---
 
 # 8. Viewpoint Analysis
 
 | Viewpoint | Labs Addressed | Key Concerns Documented |
 |-----------|----------------|-------------------------|
-| Foundational | Labs 1, 2, 3, 4 | RF propagation and packet loss; Thread mesh routing and convergence; why CoAP/UDP, CBOR, Observe, CON, and 6LoWPAN fit constrained networks. |
-| Business | Labs 1, 2, 3, 4 | ESP32-C6 sensor-node feasibility; reliable actuator communication; Daniela's battery-life concern and lower ingress bandwidth. |
-| Usage | Labs 1, 2, 3, 4 | Recommended deployment spacing; recovery after router failure; `GET` for reads, Observe for change-driven updates, and `PUT` for idempotent valve commands. |
-| Functional | Labs 1, 2, 3, 4 | IPv6 communication validation; SCD network management, routing/forwarding, endpoint reachability, and ASD service contracts separated from Thread MLE management. |
-| Trustworthiness | Labs 1, 2, 3, 4 | Reliability degradation with distance; self-healing resilience; transparent compact data contracts; CON timeout when actuation is not confirmed. |
-| Construction | Labs 1, 2, 3, 4 | OpenThread + JTAG setup; forced multi-hop topology; ESP32-C6 OpenThread CLI plus libcoap servers on `/env/temp` and `/act/valve`. |
+| Foundational | Labs 1, 2, 3 | RF propagation and packet loss; Thread mesh routing and convergence; why CoAP/UDP, CBOR, Observe, and 6LoWPAN reduce constrained-network overhead. |
+| Business | Labs 1, 2, 3 | ESP32-C6 sensor-node feasibility; resilient actuator communication; Daniela's battery-life concern and lower ingress bandwidth. |
+| Usage | Labs 1, 2, 3 | Recommended deployment spacing; recovery after router failure; `GET` for one read or Observe for change-driven updates. |
+| Functional | Labs 1, 2, 3 | IPv6 communication validation; SCD network management, routing/forwarding, and endpoint reachability; ASD sensor-service contract separated from Thread MLE management. |
+| Trustworthiness | Labs 1, 2, 3 | Reliability degradation with distance; self-healing resilience; transparent compact data through the published `/env/temp` CBOR/CDDL contract. |
+| Construction | Labs 1, 2, 3 | OpenThread + JTAG setup; forced multi-hop topology; ESP32-C6 OpenThread CLI plus libcoap server on `/env/temp`. |
 
 ---
 
-# 9. Construction Viewpoint - IoT System Pattern
-
-| Pattern Element | Category | Your System |
-|---|---|---|
-| IoT Components | Device | ESP32-C6 |
-| Digital Network | Network | IEEE 802.15.4 |
-| Communication | Application/Communication | IPv6 ping |
-| IoT System | System | Distributed IoT |
-| Digital Network | Network | Thread/OpenThread Mesh |
-| IoT Devices | Device | Leader + Routers |
-| Communication | Application/Communication | IPv6 Multi-hop Routing |
-| Application Interface | Interface | CoAP `/env/temp` with `GET` and Observe |
-| Application Data | Processing | CBOR float16 temperature body documented by CDDL |
-| Application Interface | Interface | CoAP `/act/valve` with Confirmable `PUT` and `GET` |
-| Application Data | Processing | CBOR valve command `{v: 0|1}` documented by CDDL |
-
----
-
-# 10. Final Analysis
+# 9. Final Analysis
 
 ## Lab 1 - RF Characterization
 
@@ -747,9 +542,3 @@ Lab 3 moved the temperature uplink from heavier application exchanges toward a c
 CoAP/CBOR reduced one estimated compressed Thread/6LoWPAN reading to `~36 B`, about `14x` smaller than the earlier `~500 B` HTTP/JSON exchange. Observe also reduced repeated application traffic in the measured window: after the initial subscription response, `29` threshold notifications replaced `343` hypothetical `1 Hz` polling GETs, a reduction of about `91.55%`.
 
 The measured CoAP round-trip latency averaged about `44 ms`, below the `< 200 ms` target for one hop. These results support ADR-003: CoAP/UDP + CBOR is a better radio-side sensor uplink than HTTP/JSON and avoids the TCP socket, keepalive, and broker costs that make MQTT less attractive on the constrained radio path.
-
-## Lab 4 - Reliable Downlink and Actuator Control
-
-Lab 4 added the downlink side of the SoilSense control loop. The valve node was configured as a Sleepy End Device and exposed the `/act/valve` resource. A Confirmable `PUT` with `a1617601` opened the valve and `a1617600` closed it; `GET act/valve` returned the matching state, proving that the application contract and actuator state machine worked end to end.
-
-The loss test showed why CON matters for actuation. With Node V disabled, Node B logged `ResponseTimeout` instead of silently treating the command as successful. After Node V rejoined as `child`, the same command succeeded and the valve opened. This supports ADR-004: a `5 s` poll period gives a practical command-latency bound while keeping the SED poll cost near `0.155 mA` average current, or about `672 days` of poll-only battery life on 2xAA cells.
