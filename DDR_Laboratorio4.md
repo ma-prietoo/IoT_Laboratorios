@@ -503,18 +503,6 @@ The poll period belongs to the Thread child-parent communication subsystem: it d
 | Lab 4: Downlink Latency | < 30 s at 5 s poll | ~5 s worst-case by poll policy; ~1 s worst observed | [x] Pass |
 | Lab 6: DTLS Time | < 3 s | ___ s | [ ] Pass |
 
-Lab 3 `coap get` RTT samples:
-
-| Sample | Start | Response | RTT |
-|---|---|---|---:|
-| 1 | `08:23:23.098035` | `08:23:23.128424` | `30.389 ms` |
-| 2 | `08:23:25.538294` | `08:23:25.601416` | `63.122 ms` |
-| 3 | `08:23:26.410604` | `08:23:26.448489` | `37.885 ms` |
-
-```text
-(30.389 + 63.122 + 37.885) / 3 = 43.799 ms ~= 44 ms
-```
-
 ---
 
 # 7. Ethics & Sustainability Checklist
