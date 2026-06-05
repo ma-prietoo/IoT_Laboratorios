@@ -501,7 +501,6 @@ The poll period belongs to the Thread child-parent communication subsystem: it d
 | Lab 2: Mesh Recovery | Automatic | Successful | [x] Pass |
 | Lab 3: CoAP Latency | < 200 ms | ~44 ms avg | [x] Pass |
 | Lab 4: Downlink Latency | < 30 s at 5 s poll | ~5 s worst-case by poll policy; ~1 s worst observed | [x] Pass |
-| Lab 6: DTLS Time | < 3 s | ___ s | [ ] Pass |
 
 ---
 
