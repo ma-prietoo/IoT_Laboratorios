@@ -676,25 +676,7 @@ At the selected `5 s` poll period, the bare SED poll is the dominant radio-energ
 
 ---
 
-# 9. Construction Viewpoint - IoT System Pattern
-
-| Pattern Element | Category | Your System |
-|---|---|---|
-| IoT Components | Device | ESP32-C6 |
-| Digital Network | Network | IEEE 802.15.4 |
-| Communication | Application/Communication | IPv6 ping |
-| IoT System | System | Distributed IoT |
-| Digital Network | Network | Thread/OpenThread Mesh |
-| IoT Devices | Device | Leader + Routers |
-| Communication | Application/Communication | IPv6 Multi-hop Routing |
-| Application Interface | Interface | CoAP `/env/temp` with `GET` and Observe |
-| Application Data | Processing | CBOR float16 temperature body documented by CDDL |
-| Application Interface | Interface | CoAP `/act/valve` with Confirmable `PUT` and `GET` |
-| Application Data | Processing | CBOR valve command `{v: 0|1}` documented by CDDL |
-
----
-
-# 10. Final Analysis
+# 9. Final Analysis
 
 ## Lab 1 - RF Characterization
 
