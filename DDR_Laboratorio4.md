@@ -311,6 +311,37 @@ The Lab 2 Thread mesh belongs to the Sensing and Controlling Domain (SCD), but i
 
 This Functional Viewpoint separates the ISO/IEC 30141 responsibilities that were previously described only as Leader, Router, and Child roles. The Leader is not a separate domain: it implements network-management behavior inside the SCD. The Router implements routing and forwarding in the same domain, while the endpoint represents the sensing or control participant that depends on the communication subsystem.
 
+---
+
+## Application Service Contract - Lab 3
+
+| Contract Field | Lab 3 Definition |
+|---|---|
+| Resource | `/env/temp` |
+| Transport | CoAP / UDP / port `5683` |
+| Methods | `GET`, `GET + Observe` |
+| Content-Format | `60` (`application/cbor`) |
+| Observe policy | Notify when `|new - last_notified| > 0.5 C`; heartbeat freshness support remains available through Max-Age behavior |
+| Success response | `2.05 Content` |
+| Path mismatch | `4.04 Not Found` |
+| Unsupported method | `4.05 Method Not Allowed` |
+
+CBOR payload byte layout:
+
+```text
+A1            map(1)
+61 74         text(1) "t"
+F9 hh ll      float16, big-endian, IEEE 754 half-precision
+```
+
+CDDL schema:
+
+```cddl
+env-reading = {
+  t: float16   ; air temperature, degrees Celsius
+}
+```
+
 ## Application Service Contract - Lab 4
 
 | Contract Field | Lab 4 Definition |
@@ -341,6 +372,75 @@ valve-cmd = {
   v: 0 / 1   ; 0 = closed, 1 = open
 }
 ```
+
+## Protocol Stack Mapping - Lab 3
+
+| Layer | Protocol / Artifact | Role |
+|---|---|---|
+| Application service | CoAP `/env/temp` + Observe | Exposes GET and push-on-change sensor reads |
+| Application data | CBOR + CDDL | Encodes and documents the temperature body |
+| Transport | UDP | Carries each CoAP exchange without a TCP session |
+| Network adaptation | IPv6 + 6LoWPAN IPHC | Preserves IP reachability while compressing headers |
+| Mesh network | Thread / OpenThread | Supplies mesh addressing, routing, and node roles |
+| Link / radio | IEEE 802.15.4 on ESP32-C6 | Transmits the constrained low-power frames |
+
+CoAP carries application sensor data while Thread MLE handles leader election and routing maintenance, keeping the functional data plane separate from Thread management.
+
+## Lab 3 Technical Checks
+
+### Task A - API Live Check
+
+Node B requested:
+
+```text
+ot coap get fdbd:7c61:21f8:1952:6ff6:6b9d:55aa:cf5d env/temp
+```
+
+One observed payload was:
+
+```text
+a1 61 74 f9 4e 1c
+```
+
+The prefix `A1 61 74 F9` matches the published CBOR contract for a one-entry map with key `t` and a float16 value, so the live response conforms to `/env/temp`.
+
+### Task B - Observe vs Polling
+
+| Measurement | Value |
+|---|---:|
+| Observe start | `08:27:35.661371`, `OBS=78` |
+| Observe final response | `08:33:18.195202`, `OBS=107` |
+| Observe duration | `342.534 s` |
+| Observe responses visible, including subscription response | `30` |
+| Threshold notifications after subscription response | `29` |
+| Heartbeat notifications visible in measured window | `0` |
+| Polls at `1 Hz` over same duration | `343` |
+| Threshold notifications / polling GETs | `29 / 343 = 8.45%` |
+| Repeated application exchange reduction | `91.55%` |
+
+### Task C - Efficiency Audit
+
+| Stack | One-reading exchange | Bytes on the wire | Packets | vs CoAP |
+|---|---|---:|---:|---:|
+| **HTTP / JSON** (Lab 0) | TCP SYN/SYN-ACK/ACK + GET + 200 OK + FINx2 | **~500 B** | 6 | 14x |
+| **MQTT / JSON** (Lab 0.5) | PUBLISH with an already-open TCP socket | **~40 B** | 1* | 1.1x |
+| **CoAP / CBOR** (Lab 3) | One UDP datagram | **~36 B** (measured payload: `6 B`) | 1 | 1x |
+
+| CoAP Cost Element | Bytes |
+|---|---:|
+| Fixed CoAP header | 4 |
+| OpenThread CLI token | 4 |
+| Uri-Path `env` | 4 |
+| Uri-Path `temp` | 5 |
+| Content-Format option | 2 |
+| Payload marker | 1 |
+| Measured CBOR payload | 6 |
+| **Total CoAP message** | **26 B** |
+| UDP header | 8 |
+| Approximate compressed IPv6 after 6LoWPAN IPHC | ~2 |
+| **Estimated compressed on-wire total** | **~36 B** |
+
+* MQTT counts one packet per reading after connection setup, but startup connection traffic and periodic keepalives remain part of the radio energy budget.
 
 ## Lab 4 Technical Checks
 
