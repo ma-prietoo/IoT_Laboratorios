@@ -292,7 +292,7 @@ Edwin's user-domain requirement is operational confidence: after tapping "open",
 | Transferring | Change-driven delivery | CoAP Observe | Active | Lab 3 |
 | Communication | Datagram transport | UDP over Thread | Active | Lab 3 |
 | Interface | Actuator control interface | CoAP `/act/valve` | Active | Lab 4 |
-| Processing | Command encoding | CBOR valve command `{v: 0|1}` | Active | Lab 4 |
+| Processing | Command encoding | CBOR valve command `{v: 0 o 1}` | Active | Lab 4 |
 | Reliability | Confirmable delivery | CoAP CON request and response timeout | Active | Lab 4 |
 | Communication | Sleepy downlink polling | SED parent mailbox and poll period | Active | Lab 4 |
 
