@@ -443,7 +443,6 @@ CBOR is not a custom binary format because it is a standardized data representat
 | Lab 2: Mesh Recovery | Automatic | Successful | [x] Pass |
 | Lab 3: CoAP Latency | < 200 ms | ~44 ms avg | [x] Pass |
 | Lab 4: Poll Latency | < 5 s | ___ s | [ ] Pass |
-| Lab 6: DTLS Time | < 3 s | ___ s | [ ] Pass |
 
 Lab 3 `coap get` RTT samples:
 
