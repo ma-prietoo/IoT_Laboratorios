@@ -298,21 +298,6 @@ Edwin's user-domain requirement is operational confidence: after tapping "open",
 
 ---
 
-## Functional Viewpoint
-
-The Lab 2 Thread mesh belongs to the Sensing and Controlling Domain (SCD), but its behavior is described more precisely by functional responsibilities than by node roles alone.
-
-| Functional Component | Lab 2 Element | Function in the SCD | Evidence |
-|---|---|---|---|
-| Network Management | Leader role on Node A | Coordinates the Thread network, maintains dataset state, and participates in router allocation. | `ot state`, active dataset, leader logs |
-| Routing and Forwarding | Router role on Node B | Forwards IPv6 packets through the mesh and rebuilds reachability when the route changes. | neighbor table, router table, Tractor Test |
-| Sensing/Control Endpoint | Final Thread node / child-capable device | Represents the field endpoint that must remain reachable for sensing or control traffic. | ping reachability and recovery test |
-| Communication Interface | IEEE 802.15.4 + 6LoWPAN + Thread | Carries compressed IPv6 traffic among SCD devices over the low-power radio link. | OpenThread communication tests |
-
-This Functional Viewpoint separates the ISO/IEC 30141 responsibilities that were previously described only as Leader, Router, and Child roles. The Leader is not a separate domain: it implements network-management behavior inside the SCD. The Router implements routing and forwarding in the same domain, while the endpoint represents the sensing or control participant that depends on the communication subsystem.
-
----
-
 ## Application Service Contract - Lab 3
 
 | Contract Field | Lab 3 Definition |
