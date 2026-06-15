@@ -1,0 +1,249 @@
+# Business Viewpoint – SoilSense
+
+## 1. Overview
+
+The Business Viewpoint describes the SoilSense system from a business perspective, focusing on how the capabilities of the IoT architecture generate value for stakeholders, support operational objectives, and enable future service evolution.
+
+This viewpoint follows the principles defined in ISO/IEC 30141:2024 and addresses the concerns of business managers, system owners, architects, and end users.
+
+---
+
+## 2. Stakeholders
+
+### Business Manager
+
+Responsible for evaluating the operational and strategic value provided by the system.
+
+**Primary interests:**
+
+* Operational efficiency
+* Resource optimization
+* Reduced manual intervention
+* Long-term sustainability
+
+### System Owner
+
+Responsible for maintaining and evolving the solution over time.
+
+**Primary interests:**
+
+* Return on investment
+* Scalability
+* Reliability
+* Maintainability
+
+### Architect
+
+Responsible for ensuring that technical decisions support business objectives.
+
+**Primary interests:**
+
+* Interoperability
+* System evolution
+* Technology sustainability
+* Architectural consistency
+
+### End User / Operator
+
+Responsible for monitoring system status and executing control actions.
+
+**Primary interests:**
+
+* Real-time visibility
+* Remote access
+* Alerts and notifications
+* Ease of operation
+
+---
+
+## 3. Business Concerns
+
+The Business Viewpoint addresses the following concerns:
+
+1. How can the capabilities of the IoT system generate value?
+2. How can the system support innovative service models?
+3. How do the characteristics of the architecture impact business stakeholders?
+
+---
+
+## 4. System Description
+
+SoilSense is an IoT platform designed for environmental monitoring and remote control.
+
+The system consists of:
+
+* ESP32-C6 sensor nodes
+* Humidity sensors
+* Temperature sensors
+* Water level sensor
+* Pump actuator
+* Gateway node
+* OpenThread Border Router
+* Matter Controller
+* Web/Mobile Dashboard
+
+Sensor nodes collect environmental data and publish information through the network. Data is processed and delivered to the dashboard where users can visualize real-time measurements, review historical information, receive alerts, and control actuators.
+
+---
+
+## 5. Business Goals
+
+The primary business goals of SoilSense are:
+
+### Continuous Monitoring
+
+Provide permanent visibility of critical environmental variables.
+
+### Operational Efficiency
+
+Reduce the need for manual inspections and repetitive monitoring tasks.
+
+### Faster Decision Making
+
+Enable users to react quickly to environmental changes through real-time information.
+
+### Remote Operation
+
+Allow monitoring and control without requiring physical presence.
+
+### Data Traceability
+
+Maintain historical records for analysis and future decision-making.
+
+### Scalability
+
+Support the integration of additional sensor nodes and services without redesigning the architecture.
+
+### Interoperability
+
+Use open standards to facilitate future integrations and avoid vendor lock-in.
+
+---
+
+## 6. Value Proposition
+
+SoilSense transforms environmental measurements into actionable information.
+
+The platform provides:
+
+* Real-time monitoring
+* Historical data analysis
+* Automatic alerts
+* Remote actuator control
+* Continuous visibility of system status
+* Self-healing network infrastructure
+
+These capabilities improve operational awareness and support data-driven decision making.
+
+---
+
+## 7. Service Blueprint
+
+### User Interaction Layer
+
+The user accesses the system through a web or mobile dashboard.
+
+Available services include:
+
+* Real-time visualization
+* Historical data review
+* Alert management
+* Actuator control
+
+### Application Layer
+
+The Matter Controller manages device integration, state synchronization, and command distribution.
+
+### Communication Layer
+
+The system uses:
+
+* MQTT between sensor nodes and gateway
+* CoAP for device communication
+* DTLS for secure communication
+* OpenThread for IPv6 mesh networking
+
+### Physical Layer
+
+ESP32-C6 devices interact with the physical environment through sensors and actuators.
+
+---
+
+## 8. Business Value Generated
+
+| Capability             | Business Value                         |
+| ---------------------- | -------------------------------------- |
+| Humidity Monitoring    | Improved environmental awareness       |
+| Temperature Monitoring | Continuous condition tracking          |
+| Water Level Monitoring | Early detection of critical situations |
+| Pump Control           | Remote intervention capability         |
+| Dashboard              | Centralized information access         |
+| Historical Data        | Trend analysis and traceability        |
+| Alerts                 | Faster response to events              |
+| OpenThread             | Increased system availability          |
+| Matter                 | Improved interoperability              |
+
+---
+
+## 9. Business Implications
+
+### Operational Efficiency
+
+Automation reduces repetitive manual monitoring activities and allows personnel to focus on higher-value tasks.
+
+### Improved Visibility
+
+Continuous access to environmental information improves situational awareness.
+
+### Better Decision Making
+
+Historical and real-time data support informed operational decisions.
+
+### Scalability
+
+The architecture can accommodate additional devices and services as requirements evolve.
+
+### Interoperability
+
+Open standards facilitate integration with future systems and platforms.
+
+### Availability
+
+OpenThread provides self-healing capabilities that improve service continuity.
+
+### Sustainability
+
+The use of open technologies reduces dependency on proprietary ecosystems and supports long-term maintainability.
+
+---
+
+## 10. Business Risks
+
+| Risk                        | Potential Impact                          |
+| --------------------------- | ----------------------------------------- |
+| Connectivity Failure        | Delayed monitoring and control            |
+| Sensor Failure              | Incorrect information for decision making |
+| Actuator Failure            | Inability to execute corrective actions   |
+| Unauthorized Access         | Security and operational risks            |
+| External Service Dependency | Reduced functionality during outages      |
+
+---
+
+## 11. Mitigation Strategies
+
+* Secure communications through DTLS.
+* Validation of sensor data before processing.
+* Definition of safe actuator states.
+* Network self-recovery through OpenThread.
+* Use of open standards and interoperable technologies.
+* Periodic testing and maintenance procedures.
+
+---
+
+## 12. Conclusion
+
+The SoilSense architecture generates business value by combining real-time monitoring, historical analysis, remote control, and interoperable IoT technologies.
+
+From a business perspective, the system improves operational efficiency, enhances decision-making capabilities, reduces manual effort, and provides a scalable foundation for future growth.
+
+The adoption of MQTT, CoAP, OpenThread, Matter, and ESP32-C6 devices supports a sustainable and extensible architecture aligned with the principles of the ISO/IEC 30141 Business Viewpoint.
